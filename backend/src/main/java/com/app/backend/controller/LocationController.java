@@ -1,7 +1,9 @@
 package com.app.backend.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,6 +65,24 @@ public class LocationController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/random") //làm theo yêu cầu chủ tịch(random 6 địa điểm để trả về)
+    public List<Location> getRandomLocations(){
+        List<Location> locations = locationService.getAllLocations();
+        List<Integer> cache = new ArrayList<>();
+        List<Location> result = new ArrayList<>();
+        Random rd = new Random();
+        int i = 0;
+        while (i < 6) {
+            int index = rd.nextInt(locations.size());
+            if(!cache.contains(index)){
+                cache.add(index);
+                result.add(locations.get(index));
+                i++;
+            }
+        }
+        return result;
+    }
+    
     @GetMapping("/nearby_loc/{id}")
     public ResponseEntity<List<Map<String, Object>>> getNearbyLocations(@PathVariable Integer id) {
         List<Map<String, Object>> nearbyLocations = locationService.getNearbyLocations(id);
@@ -70,7 +90,7 @@ public class LocationController {
     }
   
 
-    @PostMapping("/add")
+    @PostMapping("/admin/add") // dùng cho admin
     public ResponseEntity<Location> addLocation(@RequestBody Map<String, Object> requestBody ) {
         ObjectMapper objectMapper = new ObjectMapper();
         Location location = objectMapper.convertValue(requestBody.get("location"), Location.class);
@@ -79,7 +99,7 @@ public class LocationController {
         return new ResponseEntity<>(savedLocation, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/admin/update/{id}") //dùng cho admin
     public ResponseEntity<Location> updateLocation(@PathVariable Integer id, @RequestBody Map<String, Object> requestBody) {
         ObjectMapper objectMapper = new ObjectMapper();
         Location locationDetails = objectMapper.convertValue(requestBody.get("location"), Location.class);
@@ -89,7 +109,7 @@ public class LocationController {
         return updatedLocation != null ? ResponseEntity.ok(updatedLocation) : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/admin/delete/{id}") //dùng cho admin
     public ResponseEntity<Void> deleteLocation(@PathVariable Integer id) {
         locationService.deleteLocation(id);
         return ResponseEntity.noContent().build();
