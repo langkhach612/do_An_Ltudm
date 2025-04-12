@@ -36,15 +36,20 @@ public class LocationController {
     @GetMapping("")
     public List<Location> getAllLocations() {
         return locationService.getAllLocations();
-    }
-    
+    }    
 
     // cần sửa thêm
     @GetMapping("/search")
-    public List<Location> searchLocations(@RequestParam(defaultValue = "all") String provinceId,@RequestParam(defaultValue = "all") String categoryId) {
+    public List<Location> searchLocations(@RequestParam(defaultValue = "all") String provinceId,@RequestParam(defaultValue = "all") String categoryId,
+                                        @RequestParam(defaultValue = "none") String nameLocation) {
         
         List<Location> locations;
 
+        if(!nameLocation.equals("none")){
+            locations = new ArrayList<>();
+            locations.add(locationService.getLocationByName(nameLocation));
+            return locations;
+        }
         if (!provinceId.equals("all")) {
             locations = locationService.getLocationsByProvince(Integer.parseInt(provinceId));
         } else {

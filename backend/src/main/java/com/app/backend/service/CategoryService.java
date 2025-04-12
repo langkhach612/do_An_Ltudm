@@ -26,6 +26,10 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
+    public boolean existsByName(String name) {
+        return categoryRepository.findByNameIgnoringCase(name).isPresent();
+    }
+
     public void deleteCategory(Integer id) {
         categoryRepository.deleteById(id);
     }

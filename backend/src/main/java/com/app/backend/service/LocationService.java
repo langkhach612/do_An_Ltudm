@@ -222,7 +222,7 @@ public class LocationService {
         locationRepository.deleteById(id);
     }
 
-    // tìm các địa điểm gần nhau trong cùng 1 Province(>=20km) [**cần check lại sau**]
+    // tìm các địa điểm gần nhau trong cùng 1 Province(<=20km) [**cần check lại sau**]
     private BigDecimal getDistance(Location loc1, Location loc2) {
         try {
             String url = String.format(GOONG_DISTANCE_API, loc1.getLatitude(), loc1.getLongitude(), loc2.getLatitude(), loc2.getLongitude());
