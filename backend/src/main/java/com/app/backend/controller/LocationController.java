@@ -46,8 +46,10 @@ public class LocationController {
         List<Location> locations;
 
         if(!nameLocation.equals("none")){
+            Location foundLocation = locationService.getLocationByName(nameLocation);
+            if (foundLocation == null) return null;
             locations = new ArrayList<>();
-            locations.add(locationService.getLocationByName(nameLocation));
+            locations.add(foundLocation);
             return locations;
         }
         if (!provinceId.equals("all")) {
