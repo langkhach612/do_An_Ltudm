@@ -1,5 +1,6 @@
 package com.app.backend.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,4 +32,18 @@ public interface LocationRepository extends JpaRepository<Location, Integer> {
 
     @Query("SELECT l FROM Location l LEFT JOIN FETCH l.images WHERE l.id = :id")
     Optional<Location> findByIdWithImages(@Param("id") Integer id);
+
+    // @Query("SELECT l FROM location l WHERE l.id <> :locationId")
+    // List<Location> findAllExceptId(@Param("locationId") Integer locationId);
+
+    @Query("SELECT l FROM Location l WHERE "+ "l.id <> :locationId AND " + 
+    "l.latitude BETWEEN :minLat AND :maxLat AND " + 
+    "l.longitude BETWEEN :minLng AND :maxLng")
+    List<Location> findLocationsInBoundingBox(
+        @Param("locationId") Integer locationId,
+        @Param("minLat") BigDecimal minLat,
+        @Param("maxLat") BigDecimal maxLat,
+        @Param("minLng") BigDecimal minLng,
+        @Param("maxLng") BigDecimal maxLng
+    );
 }
