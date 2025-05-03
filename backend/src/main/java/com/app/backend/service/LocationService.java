@@ -120,7 +120,7 @@ public class LocationService {
                 map.put("longitude", loc.getLongitude());
                 map.put("images", loc.getImages());
                 map.put("distance_km", Math.round(distance * 100.0) / 100.0); // Làm tròn 2 chữ số
-    
+                map.put("province", loc.getProvince());
                 nearby.add(map);
             }
         }
