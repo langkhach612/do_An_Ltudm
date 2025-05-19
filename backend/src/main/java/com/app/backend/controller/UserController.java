@@ -57,13 +57,16 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> postMethodName(@RequestBody Request request) {
-        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Username already exists");
+        if (userRepository.findByUsername(request.getUsername()).isPresent() || 
+            (userRepository.findByEmail(request.getEmail()).isPresent() 
+            && userRepository.findByEmail(request.getEmail()) != null)) {
+            return ResponseEntity.badRequest().body("Username or email already exists");
         }
     
         User newUser = new User();
         newUser.setUsername(request.getUsername());
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        newUser.setEmail(request.getEmail());
     
         userRepository.save(newUser);
         return ResponseEntity.ok("User registered successfully");

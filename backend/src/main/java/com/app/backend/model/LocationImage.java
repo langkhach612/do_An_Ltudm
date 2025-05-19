@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class LocationImage {
     @JsonIgnore
     private Location location;
 
-    @Column(name = "image_url", nullable = false)
+    @Lob
+    @Column(name = "image_url", nullable = false, columnDefinition = "TEXT")
     private String image_url;
 }
