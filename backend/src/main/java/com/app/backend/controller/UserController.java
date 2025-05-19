@@ -58,8 +58,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<String> postMethodName(@RequestBody Request request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent() || 
-            (userRepository.findByEmail(request.getEmail()).isPresent() 
-            && userRepository.findByEmail(request.getEmail()) != null)) {
+            !(userRepository.findByEmail(request.getEmail()).isEmpty())) {
             return ResponseEntity.badRequest().body("Username or email already exists");
         }
     
