@@ -195,13 +195,24 @@ public class LocationService {
         // }
 
         // Cập nhật ảnh (Thêm/Sửa/Xóa)
-        List<LocationImage> existingImages = locationImagRepository.findByLocation(existingLocation);
-        Set<String> newImageUrls = images.stream().map(LocationImage::getImage_url).collect(Collectors.toSet());
+        List<LocationImage> existingImages = locationImagRepository.findByLocationId(existingLocation.getId());
+        // Set<String> newImageUrls = images.stream().map(LocationImage::getImage_url).collect(Collectors.toSet());
+        
+        // in ra các id của ảnh mới để kiểm tra
+        System.out.println("Existing Image IDs: " + existingImages.stream().map(LocationImage::getId).collect(Collectors.toSet()));
+
+        Set<Integer> newImageIds = images.stream()
+            .filter(img -> img.getId() != null) // lọc ra các ảnh có id (đã tồn tại)
+            .map(LocationImage::getId)
+            .collect(Collectors.toSet());
+
+        System.out.println("New Image IDs: " + newImageIds);
 
         // Xóa ảnh không còn tồn tại trong danh sách mới
         for (LocationImage oldImage : existingImages) {
-            if (!newImageUrls.contains(oldImage.getImage_url())) {
-                locationImagRepository.delete(oldImage);
+            if (!newImageIds.contains(oldImage.getId())) {
+                System.out.println("Deleting Image ID: " + oldImage.getId());
+                locationImagRepository.deleteById(oldImage.getId());
             }
         }
 
